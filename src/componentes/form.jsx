@@ -5,19 +5,27 @@ class FormComponent extends React.Component {
         super(props);
         this.state = {
             note: "",
+            noteTitle: "",
         };
         this.handleNote = this.handleNote.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.moveData = this.moveData.bind(this);
     }
     handleNote(event) {
-        this.setState({ note: event.target.value });
+        this.setState({
+            note: event.target.value,
+        });
+    }
+    handleNoteTitle(event) {
+        this.setState({
+            noteTitle: event.target.value,
+        });
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        this.moveData(this.state.note, new Date());
-        this.setState({ note: "" });
+        this.moveData(this.state.note, this.state.noteTitle, new Date());
+        this.setState({ note: "", noteTitle: "" });
     }
 
     getRandomColor() {
@@ -36,11 +44,12 @@ class FormComponent extends React.Component {
         }
     }
 
-    moveData(note, date) {
+    moveData(note, noteTitle, date) {
         if (note) {
             const newnote = {
                 id: date.getTime(),
                 text: note,
+                title: noteTitle,
                 date: date.toUTCString().slice(4, -7),
                 color: this.getRandomColor(),
             };
@@ -50,15 +59,25 @@ class FormComponent extends React.Component {
     }
 
     render() {
-        const { note } = this.state;
+        const { note, noteTitle } = this.state;
         return (
             <form onSubmit={this.handleSubmit} className="form-group">
                 <div className="input-group">
+                    <input
+                        value={noteTitle}
+                        type="text"
+                        className="input-group rounded mb-2 border
+                        "
+                        placeholder="Title"
+                        onChange={(event) => this.handleNoteTitle(event)}
+                    ></input>
+                </div>
+                <div className="input-group">
                     <textarea
+                        value={note}
                         type="text"
                         className="form-control"
                         placeholder="Your note..."
-                        value={note}
                         onChange={(event) => this.handleNote(event)}
                     ></textarea>
                     <div className="input-group-prepend">
