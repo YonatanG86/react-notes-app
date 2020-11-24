@@ -13,23 +13,35 @@ class App extends React.Component {
         };
     }
 
-    rNote = (data) => {
+    callBackNote = (data) => {
         let newNotes = this.state.notes;
         newNotes.push(data);
         this.setState({ notes: newNotes });
     };
 
+    callBackrDelete = (index) => {
+        let begining = this.state.notes.slice(0, index);
+        let ending = this.state.notes.slice(index + 1);
+        this.setState({ notes: [...begining, ...ending] });
+    };
+
     render() {
-        console.log(this.state.notes);
         return (
             <div className="container-fluid vh-100">
-                <div className="row justify-content-center h-100  ml-5 mr-5 ">
-                    <div className="col-3  bg-secondary mr-5 pt-3">
-                        <FormComponent callback={this.rNote} />
+                <div className="bg-secondary shadow mb-4 row justify-content-center">
+                    <div className="col-9 pt-3">
+                        <FormComponent callback={this.callBackNote} />
                     </div>
-                    <div className="col  bg-secondary p-2">
-                        <SetNotes notes={this.state.notes} />
-                    </div>
+                </div>
+                <div>
+                    {this.state.notes.length > 0 && (
+                        <div className=" bg-light shadow d-flex justify-content-around p-3 mr-4 ml-4">
+                            <SetNotes
+                                callback={this.callBackrDelete}
+                                notes={this.state.notes}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         );
