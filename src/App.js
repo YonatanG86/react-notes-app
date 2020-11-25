@@ -12,43 +12,65 @@ class App extends React.Component {
         this.state = {
             notes: [],
             noteForModal: {},
+            indexForedit: "",
             modalIsOpen: false,
         };
+        this.callBackNote = this.callBackNote.bind(this);
         this.getNoteForModal = this.getNoteForModal.bind(this);
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.callForEdite = this.callForEdite(this);
     }
-
+    //Happens when Creating new note
     callBackNote = (data) => {
         let newNotes = this.state.notes;
         newNotes.push(data);
         this.setState({ notes: newNotes });
     };
-
+    //Happens when Detele note
     callBackDelete = (index) => {
         let begining = this.state.notes.slice(0, index);
         let ending = this.state.notes.slice(index + 1);
         this.setState({ notes: [...begining, ...ending] });
     };
-
-    getNoteForModal(note) {
+    //Happens when Opening modal
+    getNoteForModal = (note, index) => {
         this.setState({ noteForModal: note });
+        console.log("in the app when getNoteForModal", index);
+        this.setState({ indexForedit: index });
         this.openModal();
-    }
-    openModal() {
+    };
+    openModal = () => {
         this.setState({ modalIsOpen: true });
-    }
+    };
 
-    closeModal() {
+    closeModal = () => {
         this.setState({ modalIsOpen: false });
+    };
+    //Taking the index for editing
+    async callForEdite(index) {
+        // console.log("in app - upsate indexForedit", index);
+        await this.setState({ indexForedit: index });
     }
+    //Happens when When saving an eddited note in the Modal
+    editNote = (note) => {
+        console.log("in APP should happen last", this.state.indexForedit);
+        let begining = this.state.notes.slice(0, this.state.indexForedit);
+        let ending = this.state.notes.slice(this.state.indexForedit + 1);
+        // console.log(begining, ending);
+        this.setState({ notes: [...begining, note, ...ending] });
+        this.closeModal();
+    };
 
     render() {
         return (
             <div className="container-fluid vh-100">
                 <div className="bg-secondary shadow mb-4 row justify-content-center">
                     <div className="col-9 pt-3">
-                        <FormComponent callback={this.callBackNote} />
+                        <FormComponent
+                            edit={false}
+                            callback={this.callBackNote}
+                        />
                     </div>
                 </div>
                 <div>
@@ -56,6 +78,7 @@ class App extends React.Component {
                         <div className=" bg-light shadow d-flex justify-content-around p-3 mr-4 ml-4">
                             <SetNotes
                                 callback={this.callBackDelete}
+                                callbackEdit={() => this.callForEdite}
                                 callbackForModal={this.getNoteForModal}
                                 notes={this.state.notes}
                             />
@@ -63,9 +86,11 @@ class App extends React.Component {
                     )}
                 </div>
                 <Modal
+                    indexForedit={this.state.indexForedit}
                     note={this.state.noteForModal}
                     open={this.state.modalIsOpen}
                     callback={this.closeModal}
+                    callbackForEdit={this.editNote}
                 ></Modal>
             </div>
         );

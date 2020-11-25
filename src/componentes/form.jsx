@@ -4,8 +4,10 @@ class FormComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            button: "Add",
             note: "",
             noteTitle: "",
+            noteEdit: {},
         };
         this.handleNote = this.handleNote.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -24,7 +26,12 @@ class FormComponent extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        this.moveData(this.state.note, this.state.noteTitle, new Date());
+        this.moveData(
+            this.state.note,
+            this.state.noteTitle,
+            new Date(),
+            this.props.index
+        );
         this.setState({ note: "", noteTitle: "" });
     }
 
@@ -44,22 +51,43 @@ class FormComponent extends React.Component {
         }
     }
 
-    moveData(note, noteTitle, date) {
+    moveData(note, noteTitle, date, index) {
         if (note) {
+            let color = "";
+            if (this.props.noteEdit) {
+                color = this.props.noteEdit.color;
+            } else {
+                color = this.getRandomColor();
+            }
             const newnote = {
                 id: date.getTime(),
                 text: note,
                 title: noteTitle,
                 date: date.toUTCString().slice(4, -7),
-                color: this.getRandomColor(),
+                color: color,
+                forEdite: index,
             };
 
             this.props.callback(newnote);
         }
     }
 
+    componentWillMount() {
+        this.handelNoteEdite();
+    }
+    handelNoteEdite() {
+        if (this.props.edit) {
+            this.setState({
+                note: this.props.noteEdit.text,
+                noteTitle: this.props.noteEdit.title,
+                button: "Save",
+            });
+        }
+    }
+
     render() {
         const { note, noteTitle } = this.state;
+        // this.handelNoteEdite();
         return (
             <form onSubmit={this.handleSubmit} className="form-group">
                 <div className="input-group">
@@ -85,7 +113,7 @@ class FormComponent extends React.Component {
                             type="submit"
                             className="btn btn-info rounded-right"
                         >
-                            Add
+                            {this.state.button}
                         </button>
                     </div>
                 </div>

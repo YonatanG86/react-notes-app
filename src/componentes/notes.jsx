@@ -5,16 +5,25 @@ class SetNotes extends React.Component {
         super(props);
         this.state = {};
         this.handleClose = this.handleClose.bind(this);
+        this.getNoteForModal = this.getNoteForModal.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
     }
     handleClose(index) {
         if (window.confirm("Are you sure you want to delete your note?")) {
             this.props.callback(index);
         }
     }
-
-    getNoteForModal(noteForModal) {
-        this.props.callbackForModal(noteForModal);
-    }
+    handleEdit = async (index) => {
+        console.log("Happens when click on the note", index);
+        setTimeout(() => {
+            this.props.callbackEdit(index);
+        }, 650);
+    };
+    getNoteForModal = (noteForModal, index) => {
+        console.log("Note index", index);
+        console.log("Note index", noteForModal);
+        this.props.callbackForModal(noteForModal, index);
+    };
 
     render() {
         return (
@@ -24,13 +33,16 @@ class SetNotes extends React.Component {
                         <div
                             key={note.id}
                             className={`card shadow rounded-sm d-inline-flex p-2 m-2 ${note.color}`}
+                            onClick={() => {
+                                this.handleEdit(index);
+                            }}
                         >
                             <div className="row no-gutters bg-transparent">
                                 <div
                                     className=" p-1 align-items-center"
-                                    onClick={() => {
-                                        this.getNoteForModal(note);
-                                    }}
+                                    onClick={() =>
+                                        this.getNoteForModal(note, index)
+                                    }
                                 >
                                     <small>{note.date}</small>
                                 </div>

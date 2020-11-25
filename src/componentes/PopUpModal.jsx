@@ -1,4 +1,5 @@
 import React from "react";
+import FormComponent from "./form";
 
 const MODAL_STYLES = {
     position: "fixed",
@@ -30,9 +31,11 @@ class Modal extends React.Component {
         this.props.callback();
     }
     willDoNothing(e) {
-        console.log("did it?!");
         e.stopPropagation();
     }
+    WillEdit = (note) => {
+        this.props.callbackForEdit(note);
+    };
     render() {
         const { note, open } = this.props;
         if (!open) return null;
@@ -63,17 +66,12 @@ class Modal extends React.Component {
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div className="row no-gutters text-dark bg-transparent">
-                        <div className="card-header w-100 p-1 align-items-center font-weight-bold ">
-                            <h4 className="h1 p-0 m-0">{note.title}</h4>
-                        </div>
-                    </div>
-
-                    <div className="card-body p-0 m-0">
-                        <h5 className="card-title h2 p-1 m-0 font-weight-normal">
-                            {note.text}
-                        </h5>
-                    </div>
+                    <FormComponent
+                        noteEdit={note}
+                        edit={true}
+                        indexForEdite={this.props.indexForedit}
+                        callback={this.WillEdit}
+                    />
                 </div>
             </div>
             // document.getElementById("portal")
