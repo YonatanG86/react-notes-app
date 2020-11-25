@@ -1,1 +1,5 @@
-
+textarea {
+    resize: none;
+    overflow: hidden;
+    background-color: lightsalmon;
+}
