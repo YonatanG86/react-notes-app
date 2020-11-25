@@ -36,7 +36,6 @@ class App extends React.Component {
     //Happens when Opening modal
     getNoteForModal = (note, index) => {
         this.setState({ noteForModal: note });
-        console.log("in the app when getNoteForModal", index);
         this.setState({ indexForedit: index });
         this.openModal();
     };
@@ -48,17 +47,14 @@ class App extends React.Component {
         this.setState({ modalIsOpen: false });
     };
     //Taking the index for editing
-    async callForEdite(index) {
-        // console.log("in app - upsate indexForedit", index);
-        await this.setState({ indexForedit: index });
+    callForEdite(index) {
+        this.setState({ indexForedit: index });
     }
     //Happens when When saving an eddited note in the Modal
     editNote = (note) => {
-        console.log("in APP should happen last", this.state.indexForedit);
-        let begining = this.state.notes.slice(0, this.state.indexForedit);
-        let ending = this.state.notes.slice(this.state.indexForedit + 1);
-        // console.log(begining, ending);
-        this.setState({ notes: [...begining, note, ...ending] });
+        let newlistNotes = this.state.notes;
+        newlistNotes[this.state.indexForedit] = note;
+        this.setState({ notes: newlistNotes });
         this.closeModal();
     };
 
@@ -78,7 +74,7 @@ class App extends React.Component {
                         <div className=" bg-light shadow d-flex justify-content-around p-3 mr-4 ml-4">
                             <SetNotes
                                 callback={this.callBackDelete}
-                                callbackEdit={() => this.callForEdite}
+                                callForEdite={() => this.callForEdite}
                                 callbackForModal={this.getNoteForModal}
                                 notes={this.state.notes}
                             />

@@ -5,24 +5,19 @@ class SetNotes extends React.Component {
         super(props);
         this.state = {};
         this.handleClose = this.handleClose.bind(this);
-        this.getNoteForModal = this.getNoteForModal.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
     }
-    handleClose(index) {
+    handleClose(e, index) {
+        e.stopPropagation();
         if (window.confirm("Are you sure you want to delete your note?")) {
             this.props.callback(index);
         }
     }
-    handleEdit = async (index) => {
-        console.log("Happens when click on the note", index);
+    handleEdit = async (note, index) => {
         setTimeout(() => {
-            this.props.callbackEdit(index);
-        }, 650);
-    };
-    getNoteForModal = (noteForModal, index) => {
-        console.log("Note index", index);
-        console.log("Note index", noteForModal);
-        this.props.callbackForModal(noteForModal, index);
+            this.props.callForEdite(index);
+            this.props.callbackForModal(note, index);
+        }, 150);
     };
 
     render() {
@@ -34,22 +29,17 @@ class SetNotes extends React.Component {
                             key={note.id}
                             className={`card shadow rounded-sm d-inline-flex p-2 m-2 ${note.color}`}
                             onClick={() => {
-                                this.handleEdit(index);
+                                this.handleEdit(note, index);
                             }}
                         >
                             <div className="row no-gutters bg-transparent">
-                                <div
-                                    className=" p-1 align-items-center"
-                                    onClick={() =>
-                                        this.getNoteForModal(note, index)
-                                    }
-                                >
+                                <div className=" p-1 align-items-center">
                                     <small>{note.date}</small>
                                 </div>
                                 <button
                                     id={index}
-                                    onClick={() => {
-                                        this.handleClose(index);
+                                    onClick={(e) => {
+                                        this.handleClose(e, index);
                                     }}
                                     type="button"
                                     className="close ml-2 mb-1"
@@ -58,11 +48,7 @@ class SetNotes extends React.Component {
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div
-                                onClick={() => {
-                                    this.getNoteForModal(note);
-                                }}
-                            >
+                            <div>
                                 <div className="row no-gutters text-dark bg-transparent">
                                     <div className="card-header w-100 p-1 align-items-center font-weight-bold ">
                                         <h4 className="p-0 m-0">
