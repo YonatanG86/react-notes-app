@@ -14,24 +14,36 @@ class SetNotes extends React.Component {
         }
     }
     handleEdit = async (note, index) => {
-        setTimeout(() => {
-            this.props.callForEdite(index);
-            this.props.callbackForModal(note, index);
-        }, 150);
+        this.props.callForEdite(index);
+        this.props.callbackForModal(note, index);
     };
 
     render() {
         return (
-            <div>
+            <div className="d-box align-content-start">
                 {this.props.notes.map((note, index) => {
                     return (
                         <div
                             key={note.id}
-                            className={`card shadow rounded-sm d-inline-flex p-2 m-2 ${note.color}`}
+                            className={`sticky-note card shadow rounded-sm d-inline-flex p-2 m-2 `}
+                            style={{
+                                maxWidth: "200px",
+                                background: `${note.color}`,
+                                transform: `rotate(${note.rotate}deg)`,
+                                WebkitTransform: `rotate(${note.rotate}deg)`,
+                            }}
                             onClick={() => {
                                 this.handleEdit(note, index);
                             }}
                         >
+                            <div className="row justify-content-center">
+                                <div
+                                    className="pin"
+                                    style={{
+                                        backgroundImage: `radial-gradient(${note.pin} 50%, black 100%)`,
+                                    }}
+                                ></div>
+                            </div>
                             <div className="row no-gutters bg-transparent">
                                 <div className=" p-1 align-items-center">
                                     <small>{note.date}</small>

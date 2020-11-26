@@ -36,28 +36,57 @@ class FormComponent extends React.Component {
     }
 
     getRandomColor() {
-        const num = Math.floor(Math.random() * 5);
+        const num = Math.floor(Math.random() * 6);
         switch (num) {
             case 1:
-                return "bg-success";
+                return "#ff7eb9";
             case 2:
-                return "bg-danger";
+                return "#ccf";
             case 3:
-                return "bg-light";
+                return "#7afcff";
             case 4:
-                return "bg-warning";
+                return "b#feff9c";
+            case 5:
+                return "#cfc";
+            case 6:
+                return "#fff";
             default:
-                return "bg-primary";
+                return "#fff740";
         }
+    }
+
+    getRandomColorPin() {
+        const num = Math.floor(Math.random() * 3);
+        switch (num) {
+            case 1:
+                return "red";
+            case 2:
+                return "yellow";
+            case 3:
+                return "blue";
+            default:
+                return "green";
+        }
+    }
+
+    getRandomRotate() {
+        const num = Math.random() * 8 - 4;
+        return num;
     }
 
     moveData(note, noteTitle, date, index) {
         if (note) {
-            let color = "";
+            let color,
+                pin,
+                rotate = "";
             if (this.props.noteEdit) {
                 color = this.props.noteEdit.color;
+                rotate = this.props.noteEdit.rotate;
+                pin = this.props.noteEdit.pin;
             } else {
                 color = this.getRandomColor();
+                rotate = this.getRandomRotate();
+                pin = this.getRandomColorPin();
             }
             const newnote = {
                 id: date.getTime(),
@@ -65,6 +94,8 @@ class FormComponent extends React.Component {
                 title: noteTitle,
                 date: date.toUTCString().slice(4, -7),
                 color: color,
+                rotate: rotate,
+                pin: pin,
                 forEdite: index,
             };
 
@@ -72,7 +103,7 @@ class FormComponent extends React.Component {
         }
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.handelNoteEdite();
     }
     handelNoteEdite() {
@@ -87,9 +118,11 @@ class FormComponent extends React.Component {
 
     render() {
         const { note, noteTitle } = this.state;
-        // this.handelNoteEdite();
         return (
-            <form onSubmit={this.handleSubmit} className="form-group">
+            <form
+                onSubmit={this.handleSubmit}
+                className="form-group h-100 pb-2"
+            >
                 <div className="input-group">
                     <input
                         value={noteTitle}
@@ -100,23 +133,25 @@ class FormComponent extends React.Component {
                         onChange={(event) => this.handleNoteTitle(event)}
                     ></input>
                 </div>
-                <div className="input-group">
+                <div
+                    className="border align-items-stretch "
+                    style={{
+                        height: "70%",
+                    }}
+                >
                     <textarea
+                        required
                         value={note}
                         type="text"
-                        className="form-control"
+                        className="form-control h-100 mb-1"
                         placeholder="Your note..."
                         onChange={(event) => this.handleNote(event)}
                     ></textarea>
-                    <div className="input-group-prepend">
-                        <button
-                            type="submit"
-                            className="btn btn-info rounded-right"
-                        >
-                            {this.state.button}
-                        </button>
-                    </div>
+                    <button type="submit" className="button-green">
+                        {this.state.button}
+                    </button>
                 </div>
+                <div></div>
             </form>
         );
     }
